@@ -34,51 +34,23 @@ To move beyond static demographic snapshots, CampaignOptima derives domain-engin
 
 #### a. Campaign Intensity Ratio
 Measures telemarketing outreach pressure during the current campaign relative to historical interactions:
-
-$$
-\text{Campaign\_Intensity\_Ratio}_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}
-$$
-
+$$I_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}$$
 *Interpretation:* High values signal aggressive, high-pressure contact cadences that trigger customer resistance and diminishing response rates.
 
 #### b. Recency Weight Score
 Applies exponential decay half-life weighting to historical touches, penalized for elapsed intervals and amplified by multi-touch engagement:
-
-$$
-\text{Recency\_Weight\_Score}_i = 
-\begin{cases} 
-0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead / never contacted)} \\[8pt]
-\exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot \left(1.0 + \ln(1 + \max(\text{previous}_i, 0))\right) & \text{if } \text{pdays}_i \ge 0 
-\end{cases}
-$$
-
-where $\lambda = 0.015$ (half-life $t_{1/2} = \frac{\ln(2)}{\lambda} \approx 46.2$ days).
+$$R_i = \begin{cases} 0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead)} \\  \exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot (1 + \ln(1 + \max(\text{previous}_i, 0))) & \text{if } \text{pdays}_i \ge 0 \end{cases}$$
+where $\lambda = 0.015$ (half-life $t_{1/2} \approx 46.2$ days).
 
 #### c. Financial Stability Index (FSI)
 A composite index reflecting customer liquidity and existing debt burden:
-
-1. Account balance is winsorized between bounds $[B_{\text{lower}}, B_{\text{upper}}] = [-1000.0, 25000.0]$:
-
-   $$
-   \text{Balance}_{\text{clipped}, i} = \text{clip}(\text{balance}_i, -1000.0, 25000.0)
-   $$
-
-2. Clipped balance is min-max normalized into $[-1.0, 1.0]$:
-
-   $$
-   \widetilde{\text{Balance}}_i = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} - (-1000.0)}{25000.0 - (-1000.0)}\right) - 1.0 = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} + 1000.0}{26000.0}\right) - 1.0
-   $$
-
-3. Debt liability penalties are subtracted:
-
-   $$
-   \text{FSI}_i = \widetilde{\text{Balance}}_i - 0.35 \cdot \mathbb{I}(\text{housing}_i = \text{yes}) - 0.40 \cdot \mathbb{I}(\text{loan}_i = \text{yes}) - 0.50 \cdot \mathbb{I}(\text{default}_i = \text{yes})
-   $$
+1. Account balance is winsorized between bounds $[-1000.0, 25000.0]$ and min-max normalized into $\widetilde{B}_i \in [-1, 1]$.
+2. Debt liability penalties are subtracted:
+   $$\text{FSI}_i = \widetilde{B}_i - 0.35 \cdot \mathbb{I}(\text{housing} = \text{yes}) - 0.40 \cdot \mathbb{I}(\text{loan} = \text{yes}) - 0.50 \cdot \mathbb{I}(\text{default} = \text{yes})$$
 
 #### d. Supplementary Behavioral Signals
-- **Log Call Duration:** $\text{log\_duration}_i = \ln(1 + \max(\text{duration}_i, 0))$ to normalize right-skewed interaction durations.
-- **Contact Burnout Indicator:** $\text{is\_high\_frequency\_contact}_i = \mathbb{I}(\text{campaign}_i \ge 4)$ flagging leads subjected to excessive touches.
-
+- **Log Call Duration:** $\text{log\_duration} = \ln(1 + \max(\text{duration}, 0))$ to normalize right-skewed interaction durations.
+- **Contact Burnout Indicator:** $\text{is\_high\_frequency} = \mathbb{I}(\text{campaign} \ge 4)$ flagging leads subjected to excessive touches.
 ---
 
 ### 2. Decision Science: Cost-Benefit Threshold Optimization
