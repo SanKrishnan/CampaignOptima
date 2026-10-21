@@ -38,7 +38,12 @@ $$I_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}$$
 *Interpretation:* High values signal aggressive, high-pressure contact cadences that trigger customer resistance and diminishing response rates.
 #### b. Recency Weight Score
 Applies exponential decay half-life weighting to historical touches, penalized for elapsed intervals and amplified by multi-touch engagement:
-$$R_i = \begin{cases} 0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead)} \\  \exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot \left(1 + \ln(1 + \max(\text{previous}_i, 0))\right) & \text{if } \text{pdays}_i \ge 0 \end{cases}$$
+$$
+R_i = \begin{cases} 
+0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead)} \\ 
+\exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot \left(1 + \ln(1 + \max(\text{previous}_i, 0))\right) & \text{if } \text{pdays}_i \ge 0 
+\end{cases}
+$$
 where $\lambda = 0.015$ (half-life $t_{1/2} \approx 46.2$ days).
 
 #### c. Financial Stability Index (FSI)
