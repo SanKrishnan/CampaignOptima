@@ -1,8 +1,3 @@
-"""
-CampaignOptima: AI-Driven Customer Conversion & Marketing Budget Optimization Engine
-Production Streamlit Analytics & Decision Science Dashboard (Warm Light Theme)
-"""
-
 import sys
 from pathlib import Path
 import json
