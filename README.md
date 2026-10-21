@@ -36,6 +36,7 @@ To move beyond static demographic snapshots, CampaignOptima derives domain-engin
 Measures telemarketing outreach pressure during the current campaign relative to historical interactions:
 $$I_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}$$
 *Interpretation:* High values signal aggressive, high-pressure contact cadences that trigger customer resistance and diminishing response rates.
+
 #### b. Recency Weight Score
 Applies exponential decay half-life weighting to historical touches, penalized for elapsed intervals and amplified by multi-touch engagement:
 $$
