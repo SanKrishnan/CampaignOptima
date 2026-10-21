@@ -120,20 +120,33 @@ st.markdown("""
         color: #FFFFFF !important;
     }
     
-    /* Selectbox Dropdown Menu Popup Background & Text */
-    div[data-baseweb="menu"], ul[role="listbox"] {
+    /* ==========================================================
+       ROBUST DROPDOWN MENU FIX (BaseWeb Popover & Portal Layers)
+       ========================================================== */
+    div[data-baseweb="popover"], 
+    div[data-baseweb="menu"], 
+    ul[role="listbox"], 
+    div[data-testid="stVirtualDropdown"] {
         background-color: #FFFDF5 !important;
+        background: #FFFDF5 !important;
         border: 1px solid #E2D8B3 !important;
+        box-shadow: 0 4px 12px rgba(56, 36, 13, 0.15) !important;
     }
-    li[role="option"] {
+    
+    li[role="option"], 
+    div[role="option"],
+    ul[role="listbox"] li {
         background-color: #FFFDF5 !important;
         color: #38240D !important;
     }
-    li[role="option"]:hover {
+    
+    li[role="option"]:hover, 
+    div[role="option"]:hover {
         background-color: #E2D8B3 !important;
         color: #38240D !important;
     }
-    li[role="option"] div, li[role="option"] span {
+    
+    div[data-baseweb="popover"] * {
         color: #38240D !important;
     }
 
@@ -227,7 +240,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
 
 @st.cache_data
 def load_bank_data():
