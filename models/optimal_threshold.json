@@ -1,0 +1,27 @@
+{
+    "champion_model": "Tuned_XGBoost",
+    "optimal_threshold": 0.029,
+    "theoretical_breakeven_threshold": 0.05,
+    "profit_uplift": 5295.0,
+    "profit_uplift_pct": 60.55,
+    "cost_per_call": 15.0,
+    "conversion_revenue": 300.0,
+    "test_metrics": {
+        "pr_auc": 0.4179,
+        "roc_auc": 0.797,
+        "f1_score": 0.4476,
+        "precision": 0.5614,
+        "recall": 0.3721,
+        "brier_score": 0.0672,
+        "confusion_matrix": [
+            [
+                889,
+                25
+            ],
+            [
+                54,
+                32
+            ]
+        ]
+    }
+}
