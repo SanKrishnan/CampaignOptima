@@ -34,42 +34,76 @@ To move beyond static demographic snapshots, CampaignOptima derives domain-engin
 
 #### a. Campaign Intensity Ratio
 Measures telemarketing outreach pressure during the current campaign relative to historical interactions:
-$$\text{Campaign\_Intensity\_Ratio}_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}$$
+
+$$
+\text{Campaign\_Intensity\_Ratio}_i = \frac{\text{campaign}_i}{\max(\text{previous}_i, 0) + 1.0}
+$$
+
 *Interpretation:* High values signal aggressive, high-pressure contact cadences that trigger customer resistance and diminishing response rates.
 
 #### b. Recency Weight Score
 Applies exponential decay half-life weighting to historical touches, penalized for elapsed intervals and amplified by multi-touch engagement:
-$$\text{Recency\_Weight\_Score}_i = \begin{cases} 0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead / never contacted)} \\  \exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot \left(1.0 + \ln(1 + \max(\text{previous}_i, 0))\right) & \text{if } \text{pdays}_i \ge 0 \end{cases}$$
+
+$$
+\text{Recency\_Weight\_Score}_i = 
+\begin{cases} 
+0.0 & \text{if } \text{pdays}_i < 0 \text{ (cold lead / never contacted)} \\[8pt]
+\exp(-\lambda \cdot \text{clip}(\text{pdays}_i, 0, 500)) \cdot \left(1.0 + \ln(1 + \max(\text{previous}_i, 0))\right) & \text{if } \text{pdays}_i \ge 0 
+\end{cases}
+$$
+
 where $\lambda = 0.015$ (half-life $t_{1/2} = \frac{\ln(2)}{\lambda} \approx 46.2$ days).
 
 #### c. Financial Stability Index (FSI)
 A composite index reflecting customer liquidity and existing debt burden:
+
 1. Account balance is winsorized between bounds $[B_{\text{lower}}, B_{\text{upper}}] = [-1000.0, 25000.0]$:
-   $$\text{Balance}_{\text{clipped}, i} = \text{clip}(\text{balance}_i, -1000.0, 25000.0)$$
+
+   $$
+   \text{Balance}_{\text{clipped}, i} = \text{clip}(\text{balance}_i, -1000.0, 25000.0)
+   $$
+
 2. Clipped balance is min-max normalized into $[-1.0, 1.0]$:
-   $$\widetilde{\text{Balance}}_i = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} - (-1000.0)}{25000.0 - (-1000.0)}\right) - 1.0 = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} + 1000.0}{26000.0}\right) - 1.0$$
+
+   $$
+   \widetilde{\text{Balance}}_i = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} - (-1000.0)}{25000.0 - (-1000.0)}\right) - 1.0 = 2 \cdot \left(\frac{\text{Balance}_{\text{clipped}, i} + 1000.0}{26000.0}\right) - 1.0
+   $$
+
 3. Debt liability penalties are subtracted:
-   $$\text{FSI}_i = \widetilde{\text{Balance}}_i - 0.35 \cdot \mathbb{I}(\text{housing}_i = \text{yes}) - 0.40 \cdot \mathbb{I}(\text{loan}_i = \text{yes}) - 0.50 \cdot \mathbb{I}(\text{default}_i = \text{yes})$$
+
+   $$
+   \text{FSI}_i = \widetilde{\text{Balance}}_i - 0.35 \cdot \mathbb{I}(\text{housing}_i = \text{yes}) - 0.40 \cdot \mathbb{I}(\text{loan}_i = \text{yes}) - 0.50 \cdot \mathbb{I}(\text{default}_i = \text{yes})
+   $$
 
 #### d. Supplementary Behavioral Signals
 - **Log Call Duration:** $\text{log\_duration}_i = \ln(1 + \max(\text{duration}_i, 0))$ to normalize right-skewed interaction durations.
 - **Contact Burnout Indicator:** $\text{is\_high\_frequency\_contact}_i = \mathbb{I}(\text{campaign}_i \ge 4)$ flagging leads subjected to excessive touches.
+
 ---
 
 ### 2. Decision Science: Cost-Benefit Threshold Optimization
 Standard machine learning assigns $\hat{y}_i = 1$ when predicted probability $\hat{p}_i \ge 0.50$. In marketing economics, however, the financial payoffs are highly asymmetric ([`src/config.py`](src/config.py)):
-- **Direct contact cost per call ($C_{\text{call}}$):** $\$15.00$
-- **Net revenue value per conversion ($V_{\text{deposit}}$):** $\$300.00$
-- **Excess contact penalty ($C_{\text{burnout}}$):** $\$5.00$ per excess call ($>3$ calls)
+- **Direct contact cost per call ($C_{\text{call}}$):** \$15.00
+- **Net revenue value per conversion ($V_{\text{deposit}}$):** \$300.00
+- **Excess contact penalty ($C_{\text{burnout}}$):** \$5.00 per excess call ($>3$ calls)
 
 The expected net profit for contacting customer $i$ is:
-$$\mathbb{E}[\text{Profit}_i] = \hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}}$$
+
+$$
+\mathbb{E}[\text{Profit}_i] = \hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}}
+$$
 
 The theoretical zero-profit break-even probability threshold is:
-$$\tau_{\text{breakeven}} = \frac{C_{\text{call}}}{V_{\text{deposit}}} = \frac{\$15.00}{\$300.00} = 0.05 \quad (5.0\%)$$
+
+$$
+\tau_{\text{breakeven}} = \frac{C_{\text{call}}}{V_{\text{deposit}}} = \frac{15.00}{300.00} = 0.05 \quad (5.0\%)
+$$
 
 CampaignOptima sweeps $\tau \in [0.01, 0.95]$ over empirical validation observations to identify the optimal cutoff $\tau^*$:
-$$\tau^* = \arg\max_{\tau} \sum_{i=1}^N \mathbb{I}(\hat{p}_i \ge \tau) \left( y_i \cdot V_{\text{deposit}} - C_{\text{call}} \right)$$
+
+$$
+\tau^* = \arg\max_{\tau} \sum_{i=1}^N \mathbb{I}(\hat{p}_i \ge \tau) \left( y_i \cdot V_{\text{deposit}} - C_{\text{call}} \right)
+$$
 
 *Empirical Calibration Result ([`models/optimal_threshold.json`](models/optimal_threshold.json)):*
 - **Optimal Decision Threshold ($\tau^*$):** **$0.029$**
@@ -81,18 +115,23 @@ $$\tau^* = \arg\max_{\tau} \sum_{i=1}^N \mathbb{I}(\hat{p}_i \ge \tau) \left( y_
 ### 3. Operations Research: Knapsack Budget Allocation
 When deploying campaigns under real-world budgetary and call capacity ceilings, CampaignOptima formulates resource allocation as a **Bounded Linear Program / 0-1 Knapsack Problem** implemented in [`src/optimization.py`](src/optimization.py):
 
-$$\max_{\mathbf{x}} \sum_{i=1}^N x_i \cdot \left( \hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}} \right)$$
-
-$$\text{subject to:} \quad \sum_{i=1}^N x_i \cdot C_{\text{call}} \le B \quad (\text{Total Campaign Budget})$$
-
-$$\sum_{i=1}^N x_i \le M_{\text{calls}} \quad (\text{Call Capacity / Burnout Ceiling})$$
-
-$$0 \le x_i \le 1 \quad \forall i \in \{1, \dots, N\}$$
+$$
+\begin{aligned}
+\max_{\mathbf{x}} \quad & \sum_{i=1}^N x_i \cdot \left( \hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}} \right) \\
+\text{subject to} \quad & \sum_{i=1}^N x_i \cdot C_{\text{call}} \le B \quad && (\text{Total Campaign Budget}) \\
+& \sum_{i=1}^N x_i \le M_{\text{calls}} \quad && (\text{Call Capacity / Burnout Ceiling}) \\
+& 0 \le x_i \le 1 \quad \forall i \in \{1, \dots, N\}
+\end{aligned}
+$$
 
 #### Solvers Implemented:
 1. **Linear Programming (HiGHS):** Solved via `scipy.optimize.linprog(method="highs")` with decision vector rounded to binary $x_i = \mathbb{I}(x_i^* \ge 0.5)$.
 2. **Greedy Marginal Efficiency Knapsack (Fallback / Rapid Heuristic):** Ranks leads descending by marginal return per dollar:
-   $$\text{Efficiency}_i = \frac{\hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}}}{C_{\text{call}}}$$
+
+   $$
+   \text{Efficiency}_i = \frac{\hat{p}_i \cdot V_{\text{deposit}} - C_{\text{call}}}{C_{\text{call}}}
+   $$
+
    Sequentially targets positive-return prospects until budget $B$ or contact quota $M_{\text{calls}}$ is fully exhausted.
 
 ---
