@@ -22,7 +22,7 @@ import joblib
 
 # Page Configuration
 st.set_page_config(
-    page_title="CampaignOptima | Marketing Intelligence",
+    page_title="GrahakNiti | Marketing Intelligence",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
