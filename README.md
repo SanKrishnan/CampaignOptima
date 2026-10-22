@@ -1,29 +1,27 @@
-# CampaignOptima: AI-Driven Customer Conversion & Marketing Budget Optimization Engine
+# GrahakNiti: Data-Driven Customer Targeting & Strategic Campaign Allocation Engine
 
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Framework: Streamlit](https://img.shields.io/badge/Frontend-Streamlit-red.svg)](https://streamlit.io/)
 [![Optimization: SciPy](https://img.shields.io/badge/Operations%20Research-SciPy%20HiGHS-green.svg)](https://scipy.org/)
 [![XAI: SHAP](https://img.shields.io/badge/Explainability-SHAP-purple.svg)](https://shap.readthedocs.io/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GrahakNiti%20App-brightgreen.svg)](https://grahakniti.streamlit.app/)
 
-> **An enterprise-grade, end-to-end Machine Learning and Decision Science Platform that bridges customer predictive intelligence with operational resource optimization for bank marketing campaigns.**
+> **An enterprise-grade, end-to-end Machine Learning and Decision Science Platform that unifies customer conversion propensity modeling with linear programming for optimal marketing budget allocation.**
 
 ---
 
 ## 📌 Executive Summary & Business Problem
 
-Direct telemarketing campaigns for banking products (such as term deposits) represent a classic high-volume, asymmetric-cost decision problem. In benchmark retail banking data (Moro et al., 2014), positive conversion rates hover around **~11.2%**, meaning roughly **9 out of 10 customer calls yield no deposit**.
+Direct marketing campaigns for retail and financial products represent a classic high-volume, asymmetric-cost decision problem. In benchmark marketing campaign datasets (Moro et al., 2014), positive conversion rates hover around **~11.2%**, meaning roughly **9 out of 10 targeted customer interactions yield no conversion**.
 
 Traditional marketing analytics initiatives often fail due to two fundamental structural gaps:
-1. **The Static Scoring Trap:** Machine learning teams deploy propensity models that output raw probabilities or classify leads using an arbitrary default threshold ($\tau = 0.50$). This ignores asymmetric business unit economics—specifically, the direct contact cost of placing a call versus the net lifetime customer value of a secured term deposit.
-2. **The Budget & Capacity Disconnect:** Even with calibrated probabilities, campaign managers operate under hard dollar budgets and outreach capacity limits. Prioritizing leads without mathematical optimization leads to **telemarketing fatigue** (diminishing returns and brand erosion from excessive contacts) and suboptimal Return on Marketing Investment (ROMI).
+1. **The Static Scoring Trap:** Machine learning teams deploy propensity models that output raw probabilities or classify leads using an arbitrary default threshold ($\tau = 0.50$). This ignores asymmetric business unit economics—specifically, the direct contact cost of placing an outreach call versus the net lifetime customer value of a secured conversion.
+2. **The Budget & Capacity Disconnect:** Even with calibrated probabilities, campaign managers operate under hard monetary budgets and outreach capacity limits. Prioritizing leads without mathematical optimization leads to **customer burnout** (diminishing returns and brand erosion from excessive contacts) and suboptimal Return on Marketing Investment (ROMI).
 
-**CampaignOptima** solves this by unifying:
+**GrahakNiti** (*Grahak* = Customer, *Niti* = Strategy) solves this by unifying:
 - **Phase 1: Advanced Behavioral Feature Engineering** capturing contact intensity, recency decay, financial liquidity, and contact burnout.
 - **Phase 2: Imbalance-Trained Predictive Classifiers** tuned with Bayesian optimization (**Optuna**) evaluated against **PR-AUC (Average Precision)** and **Brier Score Loss** rather than misleading raw accuracy.
-- **Phase 3: Operations Research & Decision Science** featuring cost-benefit threshold calibration and **Linear Programming (Knapsack Budget Allocation)** using `scipy.optimize.linprog` with the **HiGHS** solver.
-- **Phase 4: Regulatory-Compliant Model Explainability (XAI)** powered by **SHAP** (`TreeExplainer` with defensive fallback wrappers).
-- **Phase 5: Interactive Executive & Operational Decision Science Dashboard** built in **Streamlit**.
 
 ---
 
