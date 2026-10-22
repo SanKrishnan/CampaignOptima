@@ -326,7 +326,7 @@ def render_highlighted_benchmark_table(df):
 
 
 # Title Section
-st.markdown('<div class="main-title">CampaignOptima</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">GrahakNiti</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">AI-Driven Customer Conversion & Marketing Budget Optimization Engine</div>', unsafe_allow_html=True)
 
 df_raw = load_bank_data()
@@ -624,7 +624,7 @@ with tab2:
                     <hr style="border-color: #B8E0B0;">
                     <p><b>Expected Value:</b> ({prob:.2f} × ${threshold_meta['conversion_revenue']:.0f}) - ${threshold_meta['cost_per_call']:.0f} = <b>+${expected_val:,.2f}</b></p>
                     <p><b>Default Threshold (0.50) Decision:</b> {"TARGETED" if is_default_target else "IGNORED (FALSE NEGATIVE)"}</p>
-                    <p><b>CampaignOptima Threshold ({opt_thresh:.3f}) Decision:</b> TARGETED (HIGH PROFITABILITY)</p>
+                    <p><b>GrahakNiti Threshold ({opt_thresh:.3f}) Decision:</b> TARGETED (HIGH PROFITABILITY)</p>
                 </div>
             """, unsafe_allow_html=True)
         else:
