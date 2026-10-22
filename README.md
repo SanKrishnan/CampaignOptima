@@ -130,7 +130,7 @@ Models were benchmarked on stratified holdout test partitions following SMOTE mi
 ## 📂 Repository Architecture
 
 ```bash
-CampaignOptima/
+GrahakNiti/
 ├── app.py                          # Multi-tab Streamlit Analytics & Decision Science Web App
 ├── requirements.txt                # Production Python dependencies
 ├── README.md                       # Enterprise system documentation
@@ -166,8 +166,8 @@ CampaignOptima/
 
 ### 1. Environment Setup
 ```bash
-git clone https://github.com/your-org/CampaignOptima.git
-cd CampaignOptima
+git clone https://github.com/SanKrishnan/GrahakNiti.git
+cd GrahakNiti
 
 # Create and activate virtual environment (Python 3.9, 3.10, or 3.11 recommended)
 python -m venv venv
@@ -191,7 +191,7 @@ python src/pipeline.py
 ```bash
 streamlit run app.py
 ```
-Open your browser at `http://localhost:8501` to access the three dashboard modules:
+Open your browser at `(https://grahakniti.streamlit.app/)` to access the three dashboard modules:
 - **📊 Tab 1: Executive KPI & Campaign Analytics:** Cohort conversion rates across professions, balance tiers, contact methods, and telemarketing contact burnout curves.
 - **🎯 Tab 2: Real-Time Conversion Predictor & SHAP:** Interactive customer intake form, dynamic Behavioral Feature calculation, propensity gauge, decision recommendation card, and local SHAP waterfall driver attribution.
 - **🧮 Tab 3: Operations Research & Budget Simulator:** Marketing budget and call capacity sliders, Linear Programming solver (`scipy.optimize.linprog` with HiGHS), efficient frontier curves, and downloadable prioritized lead call sheets.
@@ -200,7 +200,7 @@ Open your browser at `http://localhost:8501` to access the three dashboard modul
 
 ## 🔍 Model Explainability (XAI)
 
-CampaignOptima utilizes [`src/explainability.py`](src/explainability.py) with a version-resilient `shap.TreeExplainer` wrapper:
+GrahakNiti utilizes [`src/explainability.py`](src/explainability.py) with a version-resilient `shap.TreeExplainer` wrapper:
 - **Global Feature Attribution:** Summarizes population-level drivers. Features such as `duration` (call engagement length), `poutcome_success` (prior positive interactions), and `balance` consistently emerge as strong positive catalysts, while high contact frequency triggers negative SHAP contributions.
 - **Local Customer Attribution:** Provides individualized waterfall and force breakdowns showing exact positive ($+$) and negative ($-$) feature contributions, equipping relationship managers with transparent reasoning before placing outreach calls.
 
